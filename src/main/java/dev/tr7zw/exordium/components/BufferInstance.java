@@ -21,7 +21,7 @@ public final class BufferInstance {
     }
 
     public boolean enabled() {
-        return Minecraft.getInstance().screen == null && settings.get().isEnabled()
+        return Minecraft.getInstance().gui.screen() == null && settings.get().isEnabled()
                 && ExordiumModBase.instance.isInitialized();
     }
 
@@ -47,7 +47,8 @@ public final class BufferInstance {
         }
         // we just render this buffered component
         buffer.getGuiTarget()
-                .blitAndBlendToTexture(Minecraft.getInstance().getMainRenderTarget().getColorTextureView());
+                .blitAndBlendToTexture(Minecraft.getInstance().gameRenderer.mainRenderTarget().getColorTextureView(),
+                        Minecraft.getInstance().gameRenderer.mainRenderTarget().getDepthTextureView());
         return true;
     }
 
@@ -69,7 +70,8 @@ public final class BufferInstance {
         pacing.setCooldown(System.currentTimeMillis() + (1000 / settings.get().getMaxFps()));
         buffer.finishCapture();
         buffer.getGuiTarget()
-                .blitAndBlendToTexture(Minecraft.getInstance().getMainRenderTarget().getColorTextureView());
+                .blitAndBlendToTexture(Minecraft.getInstance().gameRenderer.mainRenderTarget().getColorTextureView(),
+                        Minecraft.getInstance().gameRenderer.mainRenderTarget().getDepthTextureView());
     }
 
 }

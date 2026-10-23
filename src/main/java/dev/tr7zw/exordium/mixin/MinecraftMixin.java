@@ -27,35 +27,23 @@ public class MinecraftMixin {
     private static Minecraft instance;
     private boolean naggedThisSession = false;
 
-    @Inject(method = "getMainRenderTarget", at = @At("HEAD"), cancellable = true)
-    public void getMainRenderTarget(CallbackInfoReturnable<RenderTarget> ci) {
-        if (ExordiumModBase.instance == null) {
-            return; // Mod not initialized yet, so no temporary screen overwrite
-        }
-        RenderTarget target = ExordiumModBase.instance.getTemporaryScreenOverwrite();
-        if (target != null) {
-            ci.setReturnValue(target);
-            ci.cancel();
-        }
-    }
-
     //    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;allowsMultiplayer()Z", shift = Shift.BEFORE), method = "Lnet/minecraft/client/Minecraft;<init>(Lnet/minecraft/client/main/GameConfig;)V")
     //    private void init(GameConfig config, CallbackInfo info) {
     //       System.loadLibrary("renderdoc");
     //    }
 
-    @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "setScreenAndShow", at = @At("HEAD"), cancellable = true)
     public void setScreen(Screen screen, CallbackInfo ci) {
         if (!naggedThisSession && !ExordiumModBase.instance.config.iKnowThisIsNotAnActivelyDevelopedMod
                 && screen != null && screen instanceof TitleScreen) {
             // Only nag once per session
             naggedThisSession = true;
-            Minecraft.getInstance().setScreen(new ConfirmScreen(b -> {
+            Minecraft.getInstance().gui.setScreen(new ConfirmScreen(b -> {
                 if (b) {
                     ExordiumModBase.instance.config.iKnowThisIsNotAnActivelyDevelopedMod = true;
                     ExordiumModBase.instance.writeConfig();
                 }
-                Minecraft.getInstance().setScreen(screen);
+                Minecraft.getInstance().gui.setScreen(screen);
             }, ComponentProvider.translatable("text.exordium.warning"),
                     ComponentProvider.translatable("text.exordium.warning_desc")));
             ci.cancel();
