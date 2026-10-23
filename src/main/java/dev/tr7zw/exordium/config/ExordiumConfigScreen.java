@@ -44,7 +44,7 @@ public class ExordiumConfigScreen extends AbstractConfigScreen {
         WButton doneButton = new WButton(CommonComponents.GUI_DONE);
         doneButton.setOnClick(() -> {
             save();
-            Minecraft.getInstance().gui.setScreen(lastScreen);
+            Minecraft.getInstance().setScreen(lastScreen);
         });
         root.add(doneButton, 0, 27, 6, 2);
 
