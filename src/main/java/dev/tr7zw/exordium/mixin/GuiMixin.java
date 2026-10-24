@@ -10,9 +10,17 @@ import dev.tr7zw.exordium.compat.CustomRenderHook;
 import dev.tr7zw.transition.mc.ComponentProvider;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+//? if < 26.2 {
+/*
 import net.minecraft.client.gui.Gui;
+*///? }
 
+//? if >= 26.2 {
+@Mixin(value = net.minecraft.client.gui.Hud.class, priority = 1500)
+//? } else {
+/*
 @Mixin(value = Gui.class, priority = 1500)
+*///? }
 public class GuiMixin {
 
     //? if >= 26.0 {
